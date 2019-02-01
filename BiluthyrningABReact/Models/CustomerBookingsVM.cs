@@ -5,11 +5,9 @@ using System.Threading.Tasks;
 
 namespace BiluthyrningABReact.Models
 {
-    public class RentFormResponseVM
+    public class CustomerBookingsVM
     {
         public string Status { get; set; }
-        public string RegNum { get; set; }
-        public string CarbookingId { get; set; }
-        public int CarType { get; set; }
+        public CustomerBookingVM[] CustomerBookings { get; set; }
     }
 }

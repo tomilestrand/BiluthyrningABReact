@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import BookedCar from './BookedCar';
 
-class Rent extends Component {
+export default class Rent extends Component {
 
     constructor(props) {
         super(props);
@@ -9,7 +9,7 @@ class Rent extends Component {
         this.handleChangeCarType = this.handleChangeCarType.bind(this);
         this.handleChangeSSN = this.handleChangeSSN.bind(this);
         this.state = {
-            carType: "",
+            carType: "1",
             SSN: ""
         };
     }
@@ -24,6 +24,7 @@ class Rent extends Component {
 
     submitHandler(e) {
         e.preventDefault();
+        console.log(this.state);
         if (this.state.carType)
             this.props.bookCar(this.state.carType, this.state.SSN);
     }
@@ -41,7 +42,11 @@ class Rent extends Component {
                                 Vilken typ av bil vill du hyra?
                             </h6>
                             <div>
-                                <input type="text" placeholder="Biltyp" onChange={this.handleChangeCarType} required />
+                                <select value={this.state.carType} onChange={this.handleChangeCarType}>
+                                    <option value="1">Liten bil</option>
+                                    <option value="2">Van</option>
+                                    <option value="3">Minibuss</option>
+                                </select>
                             </div>
                             <h6>
                                 Skriv in ditt personnummer
@@ -55,9 +60,6 @@ class Rent extends Component {
                         </div>
                     </form >
                 </div>
-                <p>
-                    Välj 1 för liten bil, välj 2 för van, välj 3 för minibuss
-                </p>
                 <div>
                     <BookedCar bookedCar={this.props.bookedCar}></BookedCar>
                 </div>
@@ -66,4 +68,3 @@ class Rent extends Component {
     }
 }
 
-export default Rent;

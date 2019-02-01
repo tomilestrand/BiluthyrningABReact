@@ -1,15 +1,15 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace BiluthyrningABReact.Models
 {
-    public class RentFormResponseVM
+    public class Car
     {
-        public string Status { get; set; }
         public string RegNum { get; set; }
-        public string CarbookingId { get; set; }
         public int CarType { get; set; }
+        public int NumOfKm { get; set; }
     }
 }

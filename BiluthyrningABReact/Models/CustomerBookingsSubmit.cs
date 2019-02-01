@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace BiluthyrningABReact.Models
 {
-    public class ReturnFormSubmitVM
+    public class CustomerBookingsSubmit
     {
-        public string CarbookingId { get; set; }
-        public int NewMilage { get; set; }
+        public string SSN { get; set; }
     }
 }

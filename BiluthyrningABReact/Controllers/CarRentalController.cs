@@ -18,25 +18,39 @@ namespace BiluthyrningABReact.Controllers
         }
 
         [HttpGet]
-        [Route("/customers")]
-        public IActionResult Customers()
+        [Route("/activerents")]
+        public async Task<IActionResult> ActiveRents()
         {
-            return Json(service.GetAllCustomers());
+            return Json(await service.GetAllActiveRents());
+        }
+
+        [HttpGet]
+        [Route("/customers")]
+        public async Task<IActionResult> Customers()
+        {
+            return Json(await service.GetAllCustomers());
         }
 
         [HttpPost]
         [Route("/rentcar")]
-        public IActionResult RentCar([FromBody]RentFormSubmitVM json)
+        public async Task<IActionResult> RentCar([FromBody]RentFormSubmitVM json)
         {
-            return Json(service.MakeRentFormResponseVM(json));
+            return Json(await service.MakeRentFormResponseVM(json));
         }
 
-        [Route("/rentcar")]
-        [HttpGet]
-        public IActionResult RentCar()
+        [HttpPost]
+        [Route("/customers")]
+        public async Task<IActionResult> Customers([FromBody]CustomerBookingsSubmit SSN)
         {
-            return Ok();
+            return Json(await service.GetCustomerBookings(SSN.SSN));
         }
+
+        //[Route("/rentcar")]
+        //[HttpGet]
+        //public IActionResult RentCar()
+        //{
+        //    return Ok();
+        //}
 
         //[Route("/")]
         //public IActionResult Index()
@@ -46,11 +60,11 @@ namespace BiluthyrningABReact.Controllers
 
         [HttpPost]
         [Route("/returncar")]
-        public IActionResult ReturnCar([FromBody]ReturnFormSubmitVM json)
+        public async Task<IActionResult> ReturnCar([FromBody]ReturnFormSubmitVM json)
         {
-            ReturnFormResponseVM response = service.MakeReturnFormResponseVM(json);
+            //ReturnFormResponseVM response = service.MakeReturnFormResponseVM(json);
 
-            return Json(response);
+            return Json(await service.MakeReturnFormResponseVM(json));
         }
     }
 }
