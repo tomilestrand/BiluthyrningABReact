@@ -4,22 +4,19 @@ import ReturnedCar from './ReturnedCar';
 class Return extends Component {
     constructor() {
         super();
-        this.submitHandler = this.submitHandler.bind(this);
-        this.handleChangeBooking = this.handleChangeBooking.bind(this);
-        this.handleChangeMilage = this.handleChangeMilage.bind(this);
         this.state = {
             bookingNumber: "",
             newMilage: ""
         };
     }
 
-    handleChangeBooking(e) {
+    handleChangeBooking = (e) => {
         this.setState({ bookingNumber: e.target.value })
     }
-    handleChangeMilage(e) {
+    handleChangeMilage = (e) => {
         this.setState({ newMilage: e.target.value })
     }
-    submitHandler(e) {
+    submitHandler = (e) => {
         e.preventDefault();
         if (this.state.bookingNumber && this.state.newMilage)
             this.props.returnCar(this.state.bookingNumber, this.state.newMilage);
@@ -47,7 +44,7 @@ class Return extends Component {
                             <input type="text" placeholder="Nuvarande kmantal" onChange={this.handleChangeMilage} required></input>
                         </div>
                     </div>
-                    <input type="submit" value="Välj bil" />
+                    <input type="submit" value="Lämna bil" />
                 </form >
                 <div>
                     <ReturnedCar returnedCar={this.props.returnedCar}></ReturnedCar>

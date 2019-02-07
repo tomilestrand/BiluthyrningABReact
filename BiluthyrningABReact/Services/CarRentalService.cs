@@ -131,12 +131,21 @@ namespace BiluthyrningABReact.Services
             return response.ToArray();
         }
 
+        static bool ValidSSN(string input)
+        {
+            return input.Length == 13 && input[8] == '-' && input.Substring(0, 8).All(char.IsDigit) && input.Substring(9, 4).All(char.IsDigit);
+        }
+
         internal async Task<RentFormResponseVM> MakeRentFormResponseVM(RentFormSubmitVM json)
         {
+            var car = cars.SingleOrDefault(c => c.CarType == json.CarType);
+            if (car == null)
+                return new RentFormResponseVM { Status = "No car of that type available" };
+            if (!ValidSSN(json.SSN))
+                return new RentFormResponseVM { Status = "Invalid SSN" };
             try
             {
                 var collection = GetCollectionFromDb<BsonDocument>("CarBooking");
-                var car = cars.SingleOrDefault(c => c.CarType == json.CarType);
                 string bookingId = Guid.NewGuid().ToString().Substring(0, 8);
                 var document = new BsonDocument
                 {
@@ -154,7 +163,7 @@ namespace BiluthyrningABReact.Services
             catch (Exception e)
             {
                 var error = e;
-                return new RentFormResponseVM { Status = "Failed" };
+                return new RentFormResponseVM { Status = "Transaction failed" };
             }
         }
 
@@ -162,23 +171,29 @@ namespace BiluthyrningABReact.Services
         {
             try
             {
-                DateTime startDate;
-                DateTime returnDate = DateTime.Now.Date;
                 var collection = GetCollectionFromDb<BsonDocument>("CarBooking");
-
                 var filter = Builders<BsonDocument>.Filter.Eq("BookingId", json.CarbookingId);
+                var booking = await collection.Find(filter).FirstOrDefaultAsync();
+                DateTime startDate = booking["StartTime"].ToLocalTime();
+                DateTime returnDate = DateTime.Now.Date;
+
+                if (DateTime.Compare(startDate, returnDate) > 0)
+                    return new ReturnFormResponseVM { Status = "Invalid return date" };
+
+                int initalKm = booking["NumberOfKmStart"].ToInt32();
+
+                if (initalKm > json.NewMilage)
+                    return new ReturnFormResponseVM { Status = "Invalid return milage" };
+
                 var update = Builders<BsonDocument>.Update.Set("ReturnDate", returnDate);
                 await UpdateDb(filter, update, collection);
 
                 update = Builders<BsonDocument>.Update.Set("NewMilage", json.NewMilage);
                 await UpdateDb(filter, update, collection);
 
-                var booking = await collection.Find(filter).FirstOrDefaultAsync();
-                startDate = booking["StartTime"].ToLocalTime();
-                long numberOfDays = (startDate.Ticks - returnDate.Ticks) / TimeSpan.TicksPerDay;
-                int initalKm = booking["NumberOfKmStart"].ToInt32();
+                long numberOfDays = (returnDate.Ticks - startDate.Ticks) / TimeSpan.TicksPerDay;
                 int numberOfKm = json.NewMilage - initalKm;
-                return new ReturnFormResponseVM { TotalPrice = CarCost(numberOfDays, initalKm, booking["CarType"].ToInt32()).ToString("0.00"), Status = "OK" };
+                return new ReturnFormResponseVM { TotalPrice = CarCost(numberOfDays, json.NewMilage - initalKm, booking["CarType"].ToInt32()).ToString("0.00"), Status = "OK" };
             }
             catch (Exception e)
             {

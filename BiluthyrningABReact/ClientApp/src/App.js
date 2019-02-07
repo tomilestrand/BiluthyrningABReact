@@ -8,11 +8,6 @@ import Customers from './components/Customers';
 export default class App extends Component {
     constructor(props) {
         super(props);
-        this.bookCar = this.bookCar.bind(this);
-        this.returnCar = this.returnCar.bind(this);
-        this.getCustomers = this.getCustomers.bind(this);
-        this.getCustomerBookings = this.getCustomerBookings.bind(this);
-        this.getActiveRents = this.getActiveRents.bind(this);
         this.state = {
             bookedCar: {},
             returnedCar: {},
@@ -24,7 +19,7 @@ export default class App extends Component {
         this.getActiveRents();
     }
 
-    returnCar(carbookingId, newMilage) {
+    returnCar = (carbookingId, newMilage) => {
         var data = {
             "CarbookingId": carbookingId,
             "NewMilage": newMilage,
@@ -50,7 +45,7 @@ export default class App extends Component {
             })
     };
 
-    bookCar(carType, SSN) {
+    bookCar = (carType, SSN) => {
         var data = {
             "SSN": SSN,
             "CarType": carType
@@ -75,7 +70,7 @@ export default class App extends Component {
             })
     };
 
-    getActiveRents() {
+    getActiveRents = ()  => {
         fetch("activerents", {
             method: 'Get',
             headers: {
@@ -90,7 +85,7 @@ export default class App extends Component {
             }))
     };
 
-    getCustomers() {
+    getCustomers = () => {
         fetch("customers", {
             method: 'Get',
             headers: {
@@ -105,7 +100,7 @@ export default class App extends Component {
             }))
     };
 
-    getCustomerBookings(SSN) {
+    getCustomerBookings = (SSN) => {
         var data = {
             "SSN": SSN,
         };

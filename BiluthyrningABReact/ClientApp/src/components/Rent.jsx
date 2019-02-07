@@ -5,24 +5,21 @@ export default class Rent extends Component {
 
     constructor(props) {
         super(props);
-        this.submitHandler = this.submitHandler.bind(this);
-        this.handleChangeCarType = this.handleChangeCarType.bind(this);
-        this.handleChangeSSN = this.handleChangeSSN.bind(this);
         this.state = {
             carType: "1",
             SSN: ""
         };
     }
 
-    handleChangeCarType(e) {
+    handleChangeCarType = (e) => {
         this.setState({ carType: e.target.value })
     }
 
-    handleChangeSSN(e) {
+    handleChangeSSN = (e) => {
         this.setState({ SSN: e.target.value })
     }
 
-    submitHandler(e) {
+    submitHandler = (e) => {
         e.preventDefault();
         console.log(this.state);
         if (this.state.carType)
