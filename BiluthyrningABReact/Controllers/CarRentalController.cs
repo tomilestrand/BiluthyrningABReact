@@ -32,6 +32,13 @@ namespace BiluthyrningABReact.Controllers
         }
 
         [HttpPost]
+        [Route("/availablecars")]
+        public async Task<IActionResult> AvailableCars([FromBody]RentFormQueryVM json)
+        {
+            return Json(await service.MakeGetAvailableCarsResponse(json));
+        }
+
+        [HttpPost]
         [Route("/rentcar")]
         public async Task<IActionResult> RentCar([FromBody]RentFormSubmitVM json)
         {

@@ -16,7 +16,8 @@ export default class App extends Component {
             customerBookings: [],
             addedCar: {},
             error: "",
-            activeRents: []
+            activeRents: [],
+            availableCars:[]
         };
         this.getActiveRents();
     }
@@ -67,6 +68,30 @@ export default class App extends Component {
                     this.setState({ bookedCar: response });
                 } else {
                     this.setState({ bookedCar: response.status })
+                }
+            })
+    };
+
+    getAvailableCars = (carType, SSN) => {
+        var data = {
+            "CarType": carType
+        };
+        fetch("availablecars", {
+            method: 'Post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': "application/json; charset=utf-8"
+            },
+            body: JSON.stringify(data)
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((response) => {
+                if (response.status === "OK") {
+                    this.setState({ availableCars: response.cars });
+                } else {
+                    this.setState({ availableCars: response.status })
                 }
             })
     };
@@ -166,7 +191,7 @@ export default class App extends Component {
                     <section>
                         <Route
                             path="/bookcar"
-                            render={(props) => <Rent {...props} bookCar={this.bookCar} bookedCar={this.state.bookedCar} />}
+                            render={(props) => <Rent {...props} getAvailableCars={this.getAvailableCars} availableCars={this.state.availableCars} bookCar={this.bookCar} bookedCar={this.state.bookedCar} />}
                         />
                         <Route
                             path="/returncar"

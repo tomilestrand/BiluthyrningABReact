@@ -26,8 +26,13 @@ class BookedCar extends Component {
                         Ditt bokningsnummer är {this.props.bookedCar.carbookingId}
                     </div>
                 </div>)
-        else
+        else if (this.props.regNum !== "") {
+            return (<div>
+                Du har valt bilen med registreringsnummer: {this.props.regNum}
+            </div>)
+        } else {
             return (<div></div>)
+        }
     }
 }
 

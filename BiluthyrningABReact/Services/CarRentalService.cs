@@ -34,6 +34,19 @@ namespace BiluthyrningABReact.Services
             return response.ToArray();
         }
 
+        internal async Task<AvailableCarsResponse> MakeGetAvailableCarsResponse(RentFormQueryVM json)
+        {
+            var cars = await GetAvailableCars(json);
+            if (cars.Length > 0)
+            {
+                return new AvailableCarsResponse { Cars = cars, Status = "OK" };
+            }
+            else
+            {
+                return new AvailableCarsResponse { Status = "Failure" };
+            }
+        }
+
         internal async Task<CustomersResponseVM> GetAllCustomers()
         {
             try
@@ -188,6 +201,14 @@ namespace BiluthyrningABReact.Services
             }
         }
 
+        internal async Task<Car[]> GetAvailableCars(RentFormQueryVM json)
+        {
+            int carType = json.CarType;
+            var collection = GetCollectionFromDb<BsonDocument>("Car");
+            var filter = Builders<BsonDocument>.Filter.Eq("CarType", carType) & Builders<BsonDocument>.Filter.Eq("Retired", false);
+            var cars = await collection.Find(filter).ToListAsync();
+            return cars.Select(car => new Car { CarType = car["CarType"].ToInt32(), NumOfKm = car["NumOfKm"].ToInt32(), RegNum = car["RegNum"].ToString() }).ToArray();
+        }
 
         private async Task<Car> GetAvailableCar(int carType)
         {

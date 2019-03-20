@@ -5,7 +5,7 @@ export default class AddCar extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            carType: "",
+            carType: "1",
             regNum: "",
             numOfKm: ""
         };

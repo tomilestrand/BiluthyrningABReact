@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import BookedCar from './BookedCar';
 
+let newIndex = 0;
+
 export default class Rent extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             carType: "1",
-            SSN: ""
+            SSN: "",
+            regNum: ""
         };
     }
 
@@ -19,10 +22,14 @@ export default class Rent extends Component {
         this.setState({ SSN: e.target.value })
     }
 
+    submitCarTypeHandler = (e) => {
+        e.preventDefault();
+        this.props.getAvailableCars(this.state.carType)
+    }
+
     submitHandler = (e) => {
         e.preventDefault();
-        console.log(this.state);
-        if (this.state.carType)
+        if (this.state.SSN !== "" && this.state.regNum !== "")
             this.props.bookCar(this.state.carType, this.state.SSN);
     }
 
@@ -33,7 +40,7 @@ export default class Rent extends Component {
                     Hyr bil här:
                 </h3>
                 <div>
-                    <form onSubmit={this.submitHandler}>
+                    <form onSubmit={this.submitCarTypeHandler}>
                         <div>
                             <h6>
                                 Vilken typ av bil vill du hyra?
@@ -45,20 +52,33 @@ export default class Rent extends Component {
                                     <option value="3">Minibuss</option>
                                 </select>
                             </div>
-                            <h6>
-                                Skriv in ditt personnummer
-                            </h6>
                             <div>
-                                <input type="text" placeholder="Personnummer" onChange={this.handleChangeSSN} required />
+                                <input type="submit" value="Välj biltyp" />
                             </div>
                         </div>
-                        <div>
-                            <input type="submit" value="Välj bil" />
-                        </div>
                     </form >
+                    <div>
+                        <ul>
+                            {this.props.availableCars.map((car) => {
+                                return <li onClick={() => this.setState({ regNum: car.regNum })} key={newIndex++}>{car.carType + " " + car.regNum + " " + car.numOfKm}</li>
+                            }
+                            )}
+                        </ul>
+                    </div>
+                    <form onSubmit={this.submitHandler}>
+                        <h6>
+                            Skriv in ditt personnummer
+                            </h6>
+                        <div>
+                            <input type="text" placeholder="Personnummer" onChange={this.handleChangeSSN} required />
+                        </div>
+                        <div>
+                            <input type="submit" value="Boka bil" />
+                        </div>
+                    </form>
                 </div>
                 <div>
-                    <BookedCar bookedCar={this.props.bookedCar}></BookedCar>
+                    <BookedCar pickedCar={this.state.regNum} bookedCar={this.props.bookedCar}></BookedCar>
                 </div>
             </div>
         );
