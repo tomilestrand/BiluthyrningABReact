@@ -61,9 +61,12 @@ export default class AddCar extends Component {
                             </div>
                         </div>
                         <div>
-                            <input type="submit" value="Välj bil" />
+                            <input type="submit" value="Lägg till bil" />
                         </div>
                     </form >
+                </div>
+                <div>
+                    {this.props.addedCar}
                 </div>
             </div>
         );

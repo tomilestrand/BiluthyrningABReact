@@ -178,7 +178,7 @@ export default class App extends Component {
                         />
                         <Route
                             path="/addcar"
-                            render={(props) => <AddCar {...props} addCar={this.addCar} addedCar={this.addedCar} />}
+                            render={(props) => <AddCar {...props} addCar={this.addCar} addedCar={this.state.addedCar} />}
                         />
                     </section>
                 {this.state.activeRents.regNum}
