@@ -65,9 +65,6 @@ export default class AddCar extends Component {
                         </div>
                     </form >
                 </div>
-                <div>
-                    {this.props.addedCar}
-                </div>
             </div>
         );
     }
