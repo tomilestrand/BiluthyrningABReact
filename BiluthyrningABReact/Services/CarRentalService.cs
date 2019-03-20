@@ -16,12 +16,6 @@ namespace BiluthyrningABReact.Services
         private const string connString = "mongodb://localhost:27017";
         private const string database = "BiluthyrningAB";
 
-        static readonly List<Car> cars = new List<Car>
-            {
-            new Car{CarType = 1, NumOfKm = 12000, RegNum = "LTN123"},
-            new Car{CarType = 2, NumOfKm = 5500, RegNum = "VAN123"},
-            new Car{CarType = 3, NumOfKm = 4000, RegNum = "MBS123"},
-            };
 
         internal async Task<ActiveRentsResponseVM> GetAllActiveRents()
         {
@@ -56,6 +50,11 @@ namespace BiluthyrningABReact.Services
         internal async Task<CustomerBookingsVM> GetCustomerBookings(string ssn)
         {
             return new CustomerBookingsVM { Status = "OK", CustomerBookings = await GetCustomersRents(ssn) };
+        }
+
+        internal async Task<AddCarResponseVM> MakeAddCarResponse(AddCarSubmitVM json)
+        {
+            return new AddCarResponseVM { Status = await AddNewCar(json) };
         }
 
         internal async Task<CustomerBookingVM[]> GetCustomersRents(string ssn)
@@ -112,8 +111,6 @@ namespace BiluthyrningABReact.Services
             }
         }
 
-
-
         private async Task<CustomersVM[]> GetCustomersArray()
         {
             var response = new List<CustomersVM>();
@@ -131,14 +128,14 @@ namespace BiluthyrningABReact.Services
             return response.ToArray();
         }
 
-        static bool ValidSSN(string input)
+        internal static bool ValidSSN(string input)
         {
             return input.Length == 13 && input[8] == '-' && input.Substring(0, 8).All(char.IsDigit) && input.Substring(9, 4).All(char.IsDigit);
         }
 
         internal async Task<RentFormResponseVM> MakeRentFormResponseVM(RentFormSubmitVM json)
         {
-            var car = cars.SingleOrDefault(c => c.CarType == json.CarType);
+            Car car = await GetAvailableCar(json.CarType);
             if (car == null)
                 return new RentFormResponseVM { Status = "No car of that type available" };
             if (!ValidSSN(json.SSN))
@@ -165,6 +162,39 @@ namespace BiluthyrningABReact.Services
                 var error = e;
                 return new RentFormResponseVM { Status = "Transaction failed" };
             }
+        }
+
+        private async Task<string> AddNewCar(AddCarSubmitVM car)
+        {
+            try
+            {
+                var collection = GetCollectionFromDb<BsonDocument>("Car");
+                var document = new BsonDocument
+            {
+                {"CarType", car.CarType },
+                {"RegNum", car.RegNum },
+                {"NumOfKm", car.NumOfKm },
+                {"Retired", false },
+                {"DateAdded", DateTime.Now }
+            };
+                await InsertIntoDb<BsonDocument>(document, collection);
+
+                return "Transaction successful";
+            }
+            catch (Exception e)
+            {
+                var error = e;
+                return "Transaction failed";
+            }
+        }
+
+
+        private async Task<Car> GetAvailableCar(int carType)
+        {
+            var collection = GetCollectionFromDb<BsonDocument>("Car");
+            var filter = Builders<BsonDocument>.Filter.Eq("CarType", carType) & Builders<BsonDocument>.Filter.Eq("Retired", false);
+            var car = await collection.Find(filter).FirstOrDefaultAsync();
+            return new Car { CarType = car["CarType"].ToInt32(), NumOfKm = car["NumOfKm"].ToInt32(), RegNum = car["RegNum"].ToString() };
         }
 
         internal async Task<ReturnFormResponseVM> MakeReturnFormResponseVM(ReturnFormSubmitVM json)

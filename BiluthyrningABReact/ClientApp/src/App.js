@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Rent from './components/Rent';
 import Return from './components/Return';
+import AddCar from './components/AddCar';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import Customers from './components/Customers';
 
@@ -13,6 +14,7 @@ export default class App extends Component {
             returnedCar: {},
             customers: [],
             customerBookings: [],
+            addedCar: {},
             error: "",
             activeRents: []
         };
@@ -25,7 +27,6 @@ export default class App extends Component {
             "NewMilage": newMilage,
         };
         fetch("returncar", {
-            // mode: 'cors',
             method: 'Post',
             headers: {
                 'Accept': 'application/json',
@@ -66,6 +67,32 @@ export default class App extends Component {
                     this.setState({ bookedCar: response });
                 } else {
                     this.setState({ bookedCar: response.status })
+                }
+            })
+    };
+
+    addCar = (carType, regNum, numOfKm) => {
+        var data = {
+            "RegNum": regNum,
+            "NumOfKm":numOfKm,
+            "CarType": carType
+        };
+        fetch("addcar", {
+            method: 'Post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': "application/json; charset=utf-8"
+            },
+            body: JSON.stringify(data)
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((response) => {
+                if (response.status === "OK") {
+                    this.setState({ addedCar: response });
+                } else {
+                    this.setState({ addedCar: response.status })
                 }
             })
     };
@@ -135,6 +162,7 @@ export default class App extends Component {
                     <Link to="/bookcar">Hyr bil</Link>
                     <Link to="/returncar">Lämna tillbaka</Link>
                     <Link to="/customerlist">Kunder</Link>
+                    <Link to="/addcar">Lägg till bil</Link>
                     <section>
                         <Route
                             path="/bookcar"
@@ -147,6 +175,10 @@ export default class App extends Component {
                         <Route
                             path="/customerlist"
                             render={(props) => <Customers {...props} getCustomers={this.getCustomers} customers={this.state.customers} getCustomerBookings={this.getCustomerBookings} customerBookings={this.state.customerBookings} />}
+                        />
+                        <Route
+                            path="/addcar"
+                            render={(props) => <AddCar {...props} addCar={this.addCar} addedCar={this.addedCar} />}
                         />
                     </section>
                 {this.state.activeRents.regNum}

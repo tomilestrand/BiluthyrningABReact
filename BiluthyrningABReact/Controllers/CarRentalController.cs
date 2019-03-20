@@ -40,7 +40,7 @@ namespace BiluthyrningABReact.Controllers
 
         [HttpPost]
         [Route("/customers")]
-        public async Task<IActionResult> Customers([FromBody]CustomerBookingsSubmit SSN)
+        public async Task<IActionResult> Customers([FromBody]CustomerBookingsSubmitVM SSN)
         {
             return Json(await service.GetCustomerBookings(SSN.SSN));
         }
@@ -49,9 +49,14 @@ namespace BiluthyrningABReact.Controllers
         [Route("/returncar")]
         public async Task<IActionResult> ReturnCar([FromBody]ReturnFormSubmitVM json)
         {
-            //ReturnFormResponseVM response = service.MakeReturnFormResponseVM(json);
-
             return Json(await service.MakeReturnFormResponseVM(json));
+        }
+
+        [HttpPost]
+        [Route("/addcar")]
+        public async Task<IActionResult> AddCar([FromBody]AddCarSubmitVM json)
+        {
+            return Json(await service.MakeAddCarResponse(json));
         }
     }
 }
