@@ -30,7 +30,7 @@ export default class Rent extends Component {
     submitHandler = (e) => {
         e.preventDefault();
         if (this.state.SSN !== "" && this.state.regNum !== "")
-            this.props.bookCar(this.state.carType, this.state.SSN);
+            this.props.bookCar(this.state.regNum, this.state.SSN);
     }
 
     render() {
@@ -60,7 +60,7 @@ export default class Rent extends Component {
                     <div>
                         <ul>
                             {this.props.availableCars.map((car) => {
-                                return <li onClick={() => this.setState({ regNum: car.regNum })} key={newIndex++}>{car.carType + " " + car.regNum + " " + car.numOfKm}</li>
+                                return <li onClick={() => this.setState({ regNum: car.regNum })} key={newIndex++}>{car.regNum + " " + car.numOfKm + "km"}</li>
                             }
                             )}
                         </ul>

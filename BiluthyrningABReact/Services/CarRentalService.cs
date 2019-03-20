@@ -148,7 +148,7 @@ namespace BiluthyrningABReact.Services
 
         internal async Task<RentFormResponseVM> MakeRentFormResponseVM(RentFormSubmitVM json)
         {
-            Car car = await GetAvailableCar(json.CarType);
+            Car car = await GetAvailableCar(json.RegNum);
             if (car == null)
                 return new RentFormResponseVM { Status = "No car of that type available" };
             if (!ValidSSN(json.SSN))
@@ -210,10 +210,10 @@ namespace BiluthyrningABReact.Services
             return cars.Select(car => new Car { CarType = car["CarType"].ToInt32(), NumOfKm = car["NumOfKm"].ToInt32(), RegNum = car["RegNum"].ToString() }).ToArray();
         }
 
-        private async Task<Car> GetAvailableCar(int carType)
+        private async Task<Car> GetAvailableCar(string regNum)
         {
             var collection = GetCollectionFromDb<BsonDocument>("Car");
-            var filter = Builders<BsonDocument>.Filter.Eq("CarType", carType) & Builders<BsonDocument>.Filter.Eq("Retired", false);
+            var filter = Builders<BsonDocument>.Filter.Eq("RegNum", regNum) & Builders<BsonDocument>.Filter.Eq("Retired", false);
             var car = await collection.Find(filter).FirstOrDefaultAsync();
             return new Car { CarType = car["CarType"].ToInt32(), NumOfKm = car["NumOfKm"].ToInt32(), RegNum = car["RegNum"].ToString() };
         }

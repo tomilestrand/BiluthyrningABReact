@@ -11,6 +11,14 @@ export default class AddCar extends Component {
         };
     }
 
+    carResponse = (r) => {
+        if (r === "") {
+            return (<div></div>)
+        } else {
+            return (<div>{this.props.addedCar}</div>)
+        }
+    }
+
     handleChangeCarType = (e) => {
         this.setState({ carType: e.target.value })
     }
@@ -63,10 +71,10 @@ export default class AddCar extends Component {
                         <div>
                             <input type="submit" value="Lägg till bil" />
                         </div>
-                        <div>
-                           
-                        </div>
                     </form >
+                    <div>
+                        {this.carResponse(this.props.addedCar)}
+                    </div>
                 </div>
             </div>
         );

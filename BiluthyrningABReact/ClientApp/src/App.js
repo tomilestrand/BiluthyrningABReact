@@ -14,7 +14,7 @@ export default class App extends Component {
             returnedCar: {},
             customers: [],
             customerBookings: [],
-            addedCar: {},
+            addedCar: "",
             error: "",
             activeRents: [],
             availableCars:[]
@@ -47,10 +47,10 @@ export default class App extends Component {
             })
     };
 
-    bookCar = (carType, SSN) => {
+    bookCar = (regNum, SSN) => {
         var data = {
             "SSN": SSN,
-            "CarType": carType
+            "RegNum": regNum
         };
         fetch("rentcar", {
             method: 'Post',
@@ -165,13 +165,11 @@ export default class App extends Component {
             body: JSON.stringify(data)
         })
             .then((response) => {
-                console.log(response);
                 if (response.json) {
                     return response.json();
                 }
             })
             .then((response) => {
-                console.log(response)
                 if (response.status === "OK") {
                     this.setState({ customerBookings: response.customerBookings });
                 } else {
@@ -206,7 +204,6 @@ export default class App extends Component {
                             render={(props) => <AddCar {...props} addCar={this.addCar} addedCar={this.state.addedCar} />}
                         />
                     </section>
-                {this.state.activeRents.regNum}
                 </div>
             </Router>
         );

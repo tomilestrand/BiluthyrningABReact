@@ -7,7 +7,7 @@ namespace BiluthyrningABReact.Models
 {
     public class RentFormSubmitVM
     {
-        public int CarType { get; set; }
+        public string RegNum { get; set; }
         public string SSN { get; set; }
         public int CustomerId { get; set; }
     }
