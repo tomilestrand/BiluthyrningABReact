@@ -20,7 +20,7 @@ export default class Customers extends Component {
                 <div>
                     <h5>
                         Kundlista
-                </h5>
+                    </h5>
                     <ul>
                         {this.props.customers.map((customer) => {
                             return <li onClick={() => this.props.getCustomerBookings(customer.ssn)} key={newIndex++}>{customer.firstName + " " + customer.lastName + " " + customer.ssn}</li>
@@ -36,13 +36,13 @@ export default class Customers extends Component {
                             }
                         }
                         )}
-                     </ul>
+                    </ul>
                 </div>
-                    );
+            );
         } else {
             return (
                 <div>Inga resultat</div>
-                    )
-                }
-            }
+            )
+        }
+    }
 }

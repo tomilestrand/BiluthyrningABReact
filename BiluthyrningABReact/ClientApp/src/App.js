@@ -159,10 +159,10 @@ export default class App extends Component {
         return (
             <Router>
                 <div className="App">
-                    <Link to="/bookcar">Hyr bil</Link>
-                    <Link to="/returncar">Lämna tillbaka</Link>
-                    <Link to="/customerlist">Kunder</Link>
-                    <Link to="/addcar">Lägg till bil</Link>
+                    <Link className="App-link" to="/bookcar">Hyr bil</Link>
+                    <Link className="App-link" to="/returncar">Lämna tillbaka</Link>
+                    <Link className="App-link" to="/customerlist">Kunder</Link>
+                    <Link className="App-link" to="/addcar">Lägg till bil</Link>
                     <section>
                         <Route
                             path="/bookcar"
