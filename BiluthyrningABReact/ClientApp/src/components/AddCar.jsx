@@ -7,13 +7,13 @@ export default class AddCar extends Component {
         this.state = {
             carType: "1",
             regNum: "",
-            numOfKm: "",
+            numOfKm: "0",
             retire: false
         };
     }
 
     carResponse = (r) => {
-        if (r === "") {
+        if (!r) {
             return (<div></div>)
         } else {
             return (<div>{this.props.addedCar.status}</div>)

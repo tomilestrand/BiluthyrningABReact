@@ -10,12 +10,12 @@ class Return extends Component {
         };
     }
 
-    handleChangeBooking = (e) => {
-        this.setState({ bookingNumber: e.target.value })
+    handleChange = (e) => {
+        this.setState({
+            [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value
+        });
     }
-    handleChangeMilage = (e) => {
-        this.setState({ newMilage: e.target.value })
-    }
+
     submitHandler = (e) => {
         e.preventDefault();
         if (this.state.bookingNumber && this.state.newMilage)
@@ -35,13 +35,13 @@ class Return extends Component {
                             Vilket var ditt bokningsnummer?
                         </h6>
                         <div>
-                            <input type="text" placeholder="Bokningsnummer" onChange={this.handleChangeBooking} required />
+                            <input name="bookingNumber" type="text" placeholder="Bokningsnummer" onChange={this.handleChange} required />
                         </div>
                         <h6>
                             Vad är bilens nuvarande km-antal
                         </h6>
                         <div>
-                            <input type="text" placeholder="Nuvarande kmantal" onChange={this.handleChangeMilage} required></input>
+                            <input name="newMilage" type="text" placeholder="Nuvarande kmantal" onChange={this.handleChange} required></input>
                         </div>
                     </div>
                     <input type="submit" value="Lämna bil" />
