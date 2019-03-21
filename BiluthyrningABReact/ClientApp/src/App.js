@@ -182,13 +182,13 @@ export default class App extends Component {
         return (
             <Router>
                 <div className="App">
-                    <Link className="App-link" to="/bookcar">Hyr bil</Link>
+                    <Link className="App-link" to="/">Hyr bil</Link>
                     <Link className="App-link" to="/returncar">Lämna tillbaka</Link>
                     <Link className="App-link" to="/customerlist">Kunder</Link>
-                    <Link className="App-link" to="/addcar">Lägg till bil</Link>
+                    <Link className="App-link" to="/addcar">Hantera bilar</Link>
                     <section>
                         <Route
-                            path="/bookcar"
+                            exact path="/"
                             render={(props) => <Rent {...props} getAvailableCars={this.getAvailableCars} availableCars={this.state.availableCars} bookCar={this.bookCar} bookedCar={this.state.bookedCar} />}
                         />
                         <Route

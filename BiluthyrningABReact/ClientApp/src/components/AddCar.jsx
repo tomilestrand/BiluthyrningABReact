@@ -30,10 +30,11 @@ export default class AddCar extends Component {
     handleChangenumOfKm = (e) => {
         this.setState({ numOfKm: e.target.value })
     }
+
     submitHandler = (e) => {
         e.preventDefault();
         if (this.state.carType)
-            this.props.addCar(this.state.carType, this.state.regNum,this.state.numOfKm);
+            this.props.addCar(this.state.carType, this.state.regNum, this.state.numOfKm);
     }
 
     render() {
