@@ -72,7 +72,7 @@ export default class App extends Component {
             })
     };
 
-    getAvailableCars = (carType, SSN) => {
+    getAvailableCars = (carType) => {
         var data = {
             "CarType": carType
         };
@@ -91,7 +91,7 @@ export default class App extends Component {
                 if (response.status === "OK") {
                     this.setState({ availableCars: response.cars });
                 } else {
-                    this.setState({ availableCars: response.status })
+                    this.setState({ availableCars: [response.status] })
                 }
             })
     };
@@ -204,6 +204,7 @@ export default class App extends Component {
                             render={(props) => <AddCar {...props} addCar={this.addCar} addedCar={this.state.addedCar} />}
                         />
                     </section>
+                {this.state.activeRents.regNum}
                 </div>
             </Router>
         );

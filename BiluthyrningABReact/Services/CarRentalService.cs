@@ -141,7 +141,7 @@ namespace BiluthyrningABReact.Services
             return response.ToArray();
         }
 
-        internal static bool ValidSSN(string input)
+        private static bool ValidSSN(string input)
         {
             return input.Length == 13 && input[8] == '-' && input.Substring(0, 8).All(char.IsDigit) && input.Substring(9, 4).All(char.IsDigit);
         }
@@ -210,7 +210,7 @@ namespace BiluthyrningABReact.Services
             var cars = await collection.Find(filter).ToListAsync();
 
             collection = GetCollectionFromDb<BsonDocument>("CarBooking");
-            filter = Builders<BsonDocument>.Filter.Eq("CarType", carType) & Builders<BsonDocument>.Filter.Eq("ReturnDate",default(DateTime));
+            filter = Builders<BsonDocument>.Filter.Eq("CarType", carType) & Builders<BsonDocument>.Filter.Eq("EndTime", BsonValue.Create(null));
             var bookings = await collection.Find(filter).Project(q => q["CarRegistrationNumber"]).ToListAsync();
             cars.RemoveAll(car => bookings.Contains(car["RegNum"]));
 

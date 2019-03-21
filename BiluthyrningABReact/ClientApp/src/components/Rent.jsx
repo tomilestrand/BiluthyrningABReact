@@ -60,7 +60,12 @@ export default class Rent extends Component {
                     <div>
                         <ul>
                             {this.props.availableCars.map((car) => {
-                                return <li onClick={() => this.setState({ regNum: car.regNum })} key={newIndex++}>{car.regNum + " " + car.numOfKm + "km"}</li>
+                                if (car.regNum) {
+                                    return <li onClick={() => this.setState({ regNum: car.regNum })} key={newIndex++}>{car.regNum + " " + car.numOfKm + "km"}</li>
+                                }
+                                else {
+                                    return <li>Inga tillgängliga bilar</li>
+                                }
                             }
                             )}
                         </ul>
