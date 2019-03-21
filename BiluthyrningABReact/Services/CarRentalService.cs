@@ -83,7 +83,7 @@ namespace BiluthyrningABReact.Services
 
         internal async Task<AvailableCarsResponse> MakeGetAvailableCarsResponse(RentFormQueryVM json)
         {
-            var cars = await GetAvailableCars(json);
+            var cars = await GetAvailableCarsByCarType(json);
             if (cars.Length > 0)
             {
                 return new AvailableCarsResponse { Cars = cars, Status = "OK" };
@@ -169,7 +169,7 @@ namespace BiluthyrningABReact.Services
 
         internal async Task<RentFormResponseVM> MakeRentFormResponseVM(RentFormSubmitVM json)
         {
-            CarVM car = await GetAvailableCar(json.RegNum);
+            CarVM car = await GetAvailableCarByRegNum(json.RegNum);
             if (car == null)
                 return new RentFormResponseVM { Status = "No car of that type available" };
             if (!ValidSSN(json.SSN))
@@ -223,7 +223,7 @@ namespace BiluthyrningABReact.Services
             }
         }
 
-        internal async Task<CarVM[]> GetAvailableCars(RentFormQueryVM json)
+        internal async Task<CarVM[]> GetAvailableCarsByCarType(RentFormQueryVM json)
         {
             int carType = json.CarType;
             var collection = DatabaseService.GetCollectionFromDb<BsonDocument>("Car");
@@ -238,7 +238,7 @@ namespace BiluthyrningABReact.Services
             return cars.Select(car => new CarVM { CarType = car["CarType"].ToInt32(), NumOfKm = car["NumOfKm"].ToInt32(), RegNum = car["RegNum"].ToString() }).ToArray();
         }
 
-        private async Task<CarVM> GetAvailableCar(string regNum)
+        private async Task<CarVM> GetAvailableCarByRegNum(string regNum)
         {
             var collection = DatabaseService.GetCollectionFromDb<BsonDocument>("Car");
             var filter = Builders<BsonDocument>.Filter.Eq("RegNum", regNum) & Builders<BsonDocument>.Filter.Eq("Retired", false);
