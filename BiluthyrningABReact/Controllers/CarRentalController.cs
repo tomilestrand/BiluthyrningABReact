@@ -17,6 +17,13 @@ namespace BiluthyrningABReact.Controllers
             this.service = service;
         }
 
+        [HttpPost]
+        [Route("/retirecar")]
+        public async Task<IActionResult> RetireCar([FromBody]RetireCarSubmitVM json)
+        {
+            return Json(await service.MakeRetireCarResponse(json));
+        }
+
         [HttpGet]
         [Route("/activerents")]
         public async Task<IActionResult> ActiveRents()

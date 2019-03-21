@@ -22,6 +22,23 @@ namespace BiluthyrningABReact.Services
             return new ActiveRentsResponseVM { Status = "OK", ActiveRents = await GetAllActiveRentsArray() };
         }
 
+        internal async Task<RetireCarResponseVM> MakeRetireCarResponse(RetireCarSubmitVM json)
+        {
+            try
+            {
+                var collection = GetCollectionFromDb<BsonDocument>("Car");
+                var filter = Builders<BsonDocument>.Filter.Eq("RegNum", json.RegNum) & Builders<BsonDocument>.Filter.Eq("CarType", json.CarType);
+                var update = Builders<BsonDocument>.Update.Set("Retired", true);
+                await UpdateDb(filter, update, collection);
+                return new RetireCarResponseVM { Status = "OK" };
+            }
+            catch (Exception e)
+            {
+                var error = e;
+                return new RetireCarResponseVM { Status = "Failed" };
+            }
+        }
+
         private async Task<ActiveRentsVM[]> GetAllActiveRentsArray()
         {
             var response = new List<ActiveRentsVM>();

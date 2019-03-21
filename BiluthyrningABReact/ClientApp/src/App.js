@@ -15,6 +15,7 @@ export default class App extends Component {
             customers: [],
             customerBookings: [],
             addedCar: "",
+            retiredCar: "",
             error: "",
             activeRents: [],
             availableCars:[]
@@ -92,6 +93,31 @@ export default class App extends Component {
                     this.setState({ availableCars: response.cars });
                 } else {
                     this.setState({ availableCars: [response.status] })
+                }
+            })
+    };
+
+    retireCar = (carType, regNum, numOfKm) => {
+        var data = {
+            "RegNum": regNum,
+            "CarType": carType
+        };
+        fetch("retirecar", {
+            method: 'Post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': "application/json; charset=utf-8"
+            },
+            body: JSON.stringify(data)
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((response) => {
+                if (response.status === "OK") {
+                    this.setState({ retiredCar: response });
+                } else {
+                    this.setState({ retiredCar: response.status })
                 }
             })
     };
@@ -201,7 +227,7 @@ export default class App extends Component {
                         />
                         <Route
                             path="/addcar"
-                            render={(props) => <AddCar {...props} addCar={this.addCar} addedCar={this.state.addedCar} />}
+                            render={(props) => <AddCar {...props} addCar={this.addCar} addedCar={this.state.addedCar} retireCar={this.retireCar} retiredCar={this.state.retiredCar}/>}
                         />
                     </section>
                 {this.state.activeRents.regNum}

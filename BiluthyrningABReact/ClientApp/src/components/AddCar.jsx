@@ -7,7 +7,8 @@ export default class AddCar extends Component {
         this.state = {
             carType: "1",
             regNum: "",
-            numOfKm: ""
+            numOfKm: "",
+            retire: false
         };
     }
 
@@ -15,26 +16,24 @@ export default class AddCar extends Component {
         if (r === "") {
             return (<div></div>)
         } else {
-            return (<div>{this.props.addedCar}</div>)
+            return (<div>{this.props.addedCar.status}</div>)
         }
     }
 
-    handleChangeCarType = (e) => {
-        this.setState({ carType: e.target.value })
-    }
-
-    handleChangeregNum = (e) => {
-        this.setState({ regNum: e.target.value })
-    }
-
-    handleChangenumOfKm = (e) => {
-        this.setState({ numOfKm: e.target.value })
+    handleChange = (e) => {
+        this.setState({
+            [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value
+        });
     }
 
     submitHandler = (e) => {
         e.preventDefault();
-        if (this.state.carType)
+        if (!this.state.retire) {
             this.props.addCar(this.state.carType, this.state.regNum, this.state.numOfKm);
+        }
+        else {
+            this.props.retireCar(this.state.carType, this.state.regNum);
+        }
     }
 
     render() {
@@ -50,7 +49,7 @@ export default class AddCar extends Component {
                                 Vilken typ av bil vill du lägga till?
                             </h6>
                             <div>
-                                <select value={this.state.carType} onChange={this.handleChangeCarType}>
+                                <select name="carType" value={this.state.carType} onChange={this.handleChange}>
                                     <option value="1">Liten bil</option>
                                     <option value="2">Van</option>
                                     <option value="3">Minibuss</option>
@@ -60,14 +59,24 @@ export default class AddCar extends Component {
                                 Skriv in bilens registreringsnummer
                             </h6>
                             <div>
-                                <input type="text" placeholder="Registreringsnummer" onChange={this.handleChangeregNum} required />
+                                <input name="regNum" type="text" placeholder="Registreringsnummer" onChange={this.handleChange} required />
                             </div>
                             <h6>
                                 Skriv in bilens nuvarande kilometerantal
                             </h6>
                             <div>
-                                <input type="text" placeholder="Kilometerantal" onChange={this.handleChangenumOfKm} required />
+                                <input name="numOfKm" type="text" placeholder="Kilometerantal" onChange={this.handleChange} required />
                             </div>
+                        </div>
+                        <div>
+                            <h6>
+                                Skall en redan existerande bil tas bort ur systemet?
+                            </h6>
+                            <input
+                                name="retire"
+                                type="checkbox"
+                                checked={this.state.retire}
+                                onChange={this.handleChange} />
                         </div>
                         <div>
                             <input type="submit" value="Lägg till bil" />

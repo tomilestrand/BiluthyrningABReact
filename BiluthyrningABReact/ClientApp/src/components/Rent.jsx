@@ -14,12 +14,10 @@ export default class Rent extends Component {
         };
     }
 
-    handleChangeCarType = (e) => {
-        this.setState({ carType: e.target.value })
-    }
-
-    handleChangeSSN = (e) => {
-        this.setState({ SSN: e.target.value })
+    handleChange = (e) => {
+        this.setState({
+            [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value
+        });
     }
 
     submitCarTypeHandler = (e) => {
@@ -46,7 +44,7 @@ export default class Rent extends Component {
                                 Vilken typ av bil vill du hyra?
                             </h6>
                             <div>
-                                <select value={this.state.carType} onChange={this.handleChangeCarType}>
+                                <select name="carType" value={this.state.carType} onChange={this.handleChange}>
                                     <option value="1">Liten bil</option>
                                     <option value="2">Van</option>
                                     <option value="3">Minibuss</option>
@@ -64,7 +62,7 @@ export default class Rent extends Component {
                                     return <li onClick={() => this.setState({ regNum: car.regNum })} key={newIndex++}>{car.regNum + " " + car.numOfKm + "km"}</li>
                                 }
                                 else {
-                                    return <li>Inga tillgängliga bilar</li>
+                                    return <li key={newIndex++}>Inga tillgängliga bilar</li>
                                 }
                             }
                             )}
@@ -75,7 +73,7 @@ export default class Rent extends Component {
                             Skriv in ditt personnummer
                             </h6>
                         <div>
-                            <input type="text" placeholder="Personnummer" onChange={this.handleChangeSSN} required />
+                            <input type="text" name="SSN" placeholder="Personnummer" onChange={this.handleChange} required />
                         </div>
                         <div>
                             <input type="submit" value="Boka bil" />
