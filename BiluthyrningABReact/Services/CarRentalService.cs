@@ -211,8 +211,8 @@ namespace BiluthyrningABReact.Services
 
             collection = GetCollectionFromDb<BsonDocument>("CarBooking");
             filter = Builders<BsonDocument>.Filter.Eq("CarType", carType) & Builders<BsonDocument>.Filter.Eq("ReturnDate",default(DateTime));
-
-            cars.Remove(collection.Find(filter).ToBsonDocument());
+            var bookings = await collection.Find(filter).Project(q => q["CarRegistrationNumber"]).ToListAsync();
+            cars.RemoveAll(car => bookings.Contains(car["RegNum"]));
 
             return cars.Select(car => new CarVM { CarType = car["CarType"].ToInt32(), NumOfKm = car["NumOfKm"].ToInt32(), RegNum = car["RegNum"].ToString() }).ToArray();
         }
@@ -250,6 +250,7 @@ namespace BiluthyrningABReact.Services
                 collection = GetCollectionFromDb<BsonDocument>("Car");
                 filter = Builders<BsonDocument>.Filter.Eq("RegNum", regNum);
                 update = Builders<BsonDocument>.Update.Set("NumOfKm", json.NewMilage);
+                await UpdateDb(filter, update, collection);
 
                 long numberOfDays = (returnDate.Ticks - startDate.Ticks) / TimeSpan.TicksPerDay;
                 int numberOfKm = json.NewMilage - initalKm;
