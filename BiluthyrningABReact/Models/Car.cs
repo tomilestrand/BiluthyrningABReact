@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BiluthyrningABReact.Models
 {
-    public class Car
+    public class CarVM
     {
         public string RegNum { get; set; }
         public int CarType { get; set; }

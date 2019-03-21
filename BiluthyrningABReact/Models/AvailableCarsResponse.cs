@@ -8,6 +8,6 @@ namespace BiluthyrningABReact.Models
     public class AvailableCarsResponse
     {
         public string Status { get; set; }
-        public Car[] Cars { get; set; }
+        public CarVM[] Cars { get; set; }
     }
 }
