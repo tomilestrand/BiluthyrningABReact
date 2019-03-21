@@ -132,6 +132,7 @@ namespace BiluthyrningABReact.Services
                         CarType = item["CarType"].ToInt32(),
                         RegNum = item["CarRegistrationNumber"].ToString(),
                         StartTime = item["StartTime"].ToLocalTime(),
+                        CarbookingId = item["BookingId"].ToString(),
                         EndTime = !item["ReturnDate"].IsBsonNull ? item["ReturnDate"].ToLocalTime() : default,
                         MilesDriven = !item["NewMilage"].IsBsonNull ? item["NewMilage"].ToInt32() - item["NumberOfKmStart"].ToInt32() : 0
                     });
@@ -139,18 +140,10 @@ namespace BiluthyrningABReact.Services
                 catch (Exception e)
                 {
                     var error = e;
-                    response.Add(new CustomerBookingVM
-                    {
-                        CarType = item["CarType"].ToInt32(),
-                        RegNum = item["CarRegistrationNumber"].ToString(),
-                        StartTime = item["StartTime"].ToLocalTime()
-                    });
                 }
             }
             return response.ToArray();
         }
-
-       
 
         private async Task<CustomersVM[]> GetCustomersArray()
         {

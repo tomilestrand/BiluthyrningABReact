@@ -9,11 +9,6 @@ export default class Customers extends Component {
         this.props.getCustomers();
     }
 
-    //clickHandler = (e) => {
-    //    console.log(e);
-    //    this.props.getCustomerBookings();
-    //}
-
     render() {
         if (this.props.customers.length > 0) {
             return (
@@ -29,10 +24,11 @@ export default class Customers extends Component {
                     </ul>
                     < ul >
                         {this.props.customerBookings.map(function (booking) {
+                            console.log(booking)
                             if (booking.milesDriven) {
                                 return <li key={bookingIndex++}>{booking.regNum + " " + booking.carType + " " + booking.milesDriven + "km"}</li>
                             } else {
-                                return <li key={bookingIndex++}>{booking.regNum + " " + booking.carType + " pågående"}</li>
+                                return <li key={bookingIndex++}>{booking.regNum + " " + booking.carType + " pågående " + booking.carbookingId}</li>
                             }
                         }
                         )}
