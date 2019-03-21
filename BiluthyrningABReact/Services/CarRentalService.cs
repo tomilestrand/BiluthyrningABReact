@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BiluthyrningABReact.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Bson.Serialization;
 
 namespace BiluthyrningABReact.Services
 {
@@ -57,6 +58,7 @@ namespace BiluthyrningABReact.Services
             try
             {
                 var collection = DatabaseService.GetCollectionFromDb<BsonDocument>("Car");
+                //BsonSerializer.Deserialize<CarDM>(collection.ToBsonDocument());
                 var filter = Builders<BsonDocument>.Filter.Eq("RegNum", json.RegNum) & Builders<BsonDocument>.Filter.Eq("CarType", json.CarType);
                 var update = Builders<BsonDocument>.Update.Set("Retired", true);
                 await DatabaseService.UpdateDb(filter, update, collection);
@@ -74,9 +76,8 @@ namespace BiluthyrningABReact.Services
             var response = new List<ActiveRentsVM>();
 
             var collection = DatabaseService.GetCollectionFromDb<BsonDocument>("CarBooking");
-            var filter = Builders<BsonDocument>.Filter.Exists("ReturnDate");
-            var filter2 = Builders<BsonDocument>.Filter.Not(filter);
-            var bookings = await collection.Find(filter2).ToListAsync();
+            var filter = Builders<BsonDocument>.Filter.Not(Builders<BsonDocument>.Filter.Exists("ReturnDate"));
+            var bookings = await collection.Find(filter).ToListAsync();
 
             return response.ToArray();
         }
