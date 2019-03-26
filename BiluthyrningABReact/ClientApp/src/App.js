@@ -97,7 +97,7 @@ export default class App extends Component {
             })
     };
 
-    retireCar = (carType, regNum, numOfKm) => {
+    retireCar = (carType, regNum) => {
         var data = {
             "RegNum": regNum,
             "CarType": carType

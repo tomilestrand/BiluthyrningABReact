@@ -13,7 +13,7 @@ namespace BiluthyrningABReact.Services
     {
         private const decimal baseDayRental = 500;
         private const decimal kmPrice = 20;
-        private static decimal CarCost(long numberOfDays, int numberOfKm, int typeCar)
+        private static decimal CarCost(long numberOfDays, int numberOfKm, CarType typeCar)
         {
             return baseDayRental * numberOfDays * CarFactor() + KmPrice();
 
@@ -21,14 +21,14 @@ namespace BiluthyrningABReact.Services
             {
                 switch (typeCar)
                 {
-                    case 1:
+                    case CarType.Smallcar:
                         return 1M;
-                    case 2:
+                    case CarType.Van:
                         return 1.2M;
-                    case 3:
+                    case CarType.Minibus:
                         return 1.7M;
                     default:
-                        return -1M;
+                        throw new Exception("That type of car is not defined");
                 }
             }
 
@@ -36,14 +36,14 @@ namespace BiluthyrningABReact.Services
             {
                 switch (typeCar)
                 {
-                    case 1:
+                    case CarType.Smallcar:
                         return 0;
-                    case 2:
+                    case CarType.Van:
                         return kmPrice * numberOfKm;
-                    case 3:
+                    case CarType.Minibus:
                         return kmPrice * numberOfKm * 1.5M;
                     default:
-                        return -1;
+                        throw new Exception("That type of car is not defined");
                 }
             }
         }
@@ -276,7 +276,7 @@ namespace BiluthyrningABReact.Services
 
                 long numberOfDays = (returnDate.Ticks - startDate.Ticks) / TimeSpan.TicksPerDay;
                 int numberOfKm = json.NewMilage - initalKm;
-                return new ReturnFormResponseVM { TotalPrice = CarCost(numberOfDays, json.NewMilage - initalKm, booking["CarType"].ToInt32()).ToString("0.00"), Status = "OK" };
+                return new ReturnFormResponseVM { TotalPrice = CarCost(numberOfDays, json.NewMilage - initalKm, (CarType)booking["CarType"].ToInt32()).ToString("0.00"), Status = "OK" };
             }
             catch (Exception e)
             {
