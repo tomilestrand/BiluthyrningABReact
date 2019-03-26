@@ -135,11 +135,11 @@ namespace BiluthyrningABReact.Services
                 {
                     response.Add(new CustomerBookingVM
                     {
-                        CarType = item["CarType"].ToInt32(),
+                        CarType = (CarType)item["CarType"].ToInt32(),
                         RegNum = item["CarRegistrationNumber"].ToString(),
                         StartTime = item["StartTime"].ToLocalTime(),
                         CarbookingId = item["BookingId"].ToString(),
-                        EndTime = !item["ReturnDate"].IsBsonNull ? item["ReturnDate"].ToLocalTime() : default,
+                        ReturnDate = !item["ReturnDate"].IsBsonNull ? item["ReturnDate"].ToLocalTime() : default,
                         MilesDriven = !item["NewMilage"].IsBsonNull ? item["NewMilage"].ToInt32() - item["NumberOfKmStart"].ToInt32() : 0
                     });
                 }
@@ -187,7 +187,7 @@ namespace BiluthyrningABReact.Services
                     { "StartTime", DateTime.Now.Date },
                     { "CustomerId", json.SSN },
                     { "BookingId", bookingId },
-                    {"EndTime",BsonValue.Create(null) },
+                    {"ReturnDate",BsonValue.Create(null) },
                     {"NewMilage",BsonValue.Create(null) }
                 };
                 await DatabaseService.InsertIntoDb<BsonDocument>(document, collection);
@@ -232,7 +232,7 @@ namespace BiluthyrningABReact.Services
             var cars = await collection.Find(filter).ToListAsync();
 
             collection = DatabaseService.GetCollectionFromDb<BsonDocument>("CarBooking");
-            filter = Builders<BsonDocument>.Filter.Eq("CarType", carType) & Builders<BsonDocument>.Filter.Eq("EndTime", BsonValue.Create(null));
+            filter = Builders<BsonDocument>.Filter.Eq("CarType", carType) & Builders<BsonDocument>.Filter.Eq("ReturnDate", BsonValue.Create(null));
             var bookings = await collection.Find(filter).Project(q => q["CarRegistrationNumber"]).ToListAsync();
             cars.RemoveAll(car => bookings.Contains(car["RegNum"]));
 
