@@ -24,20 +24,6 @@ namespace BiluthyrningABReact.Controllers
             return Json(await service.MakeRetireCarResponse(json));
         }
 
-        [HttpGet]
-        [Route("/activerents")]
-        public async Task<IActionResult> ActiveRents()
-        {
-            return Json(await service.GetAllActiveRents());
-        }
-
-        [HttpGet]
-        [Route("/customers")]
-        public async Task<IActionResult> Customers()
-        {
-            return Json(await service.GetAllCustomers());
-        }
-
         [HttpPost]
         [Route("/availablecars")]
         public async Task<IActionResult> AvailableCars([FromBody]RentFormQueryVM json)
@@ -50,13 +36,6 @@ namespace BiluthyrningABReact.Controllers
         public async Task<IActionResult> RentCar([FromBody]RentFormSubmitVM json)
         {
             return Json(await service.MakeRentFormResponseVM(json));
-        }
-
-        [HttpPost]
-        [Route("/customers")]
-        public async Task<IActionResult> Customers([FromBody]CustomerBookingsSubmitVM SSN)
-        {
-            return Json(await service.GetCustomerBookings(SSN.SSN));
         }
 
         [HttpPost]
