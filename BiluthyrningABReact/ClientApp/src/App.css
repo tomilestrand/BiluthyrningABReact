@@ -1,5 +1,5 @@
 body {
-    background-color:darkslateblue;
+    background-color: darkslateblue;
 }
 
 .App {
@@ -15,16 +15,16 @@ ul {
 }
 
 .App-link {
-  color: #61dafb;
-  padding: 5px;
-  border: 1px solid;
-  background-color: darkslategray;
+    color: #61dafb;
+    padding: 5px;
+    border: 1px solid;
+    background-color: darkslategray;
 }
 
 .customer {
     cursor: pointer;
 }
 
-.customer:hover {
-    color: greenyellow;
-}
+    .customer:hover {
+        color: greenyellow;
+    }

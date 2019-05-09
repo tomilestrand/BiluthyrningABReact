@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using MongoDB.Driver;
 
-namespace BiluthyrningABReact.Services
+namespace BiluthyrningABReact.Models
 {
     internal static class DatabaseService
     {

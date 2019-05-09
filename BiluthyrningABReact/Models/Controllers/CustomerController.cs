@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using BiluthyrningABReact.Models;
-using BiluthyrningABReact.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BiluthyrningABReact.Controllers
+namespace BiluthyrningABReact.Models
 {
     public class CustomerController : Controller
     {
