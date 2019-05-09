@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace BiluthyrningABReact.Models
 {
-    public class AvailableCarsResponse
+    public class AvailableCarsResponseVM
     {
         public string Status { get; set; }
         public CarVM[] Cars { get; set; }

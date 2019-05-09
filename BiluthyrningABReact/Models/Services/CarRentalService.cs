@@ -87,16 +87,16 @@ namespace BiluthyrningABReact.Services
             return response.ToArray();
         }
 
-        internal async Task<AvailableCarsResponse> MakeGetAvailableCarsResponse(RentFormQueryVM json)
+        internal async Task<AvailableCarsResponseVM> MakeGetAvailableCarsResponse(RentFormQueryVM json)
         {
             var cars = await GetAvailableCarsByCarType(json);
             if (cars.Length > 0)
             {
-                return new AvailableCarsResponse { Cars = cars, Status = "OK" };
+                return new AvailableCarsResponseVM { Cars = cars, Status = "OK" };
             }
             else
             {
-                return new AvailableCarsResponse { Status = "Failure" };
+                return new AvailableCarsResponseVM { Status = "Failure" };
             }
         }
 
