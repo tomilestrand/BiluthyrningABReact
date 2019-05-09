@@ -18,7 +18,7 @@ export default class Customers extends Component {
                     </h5>
                     <ul>
                         {this.props.customers.map((customer) => {
-                            return <li onClick={() => this.props.getCustomerBookings(customer.ssn)} key={newIndex++}>{customer.firstName + " " + customer.lastName + " " + customer.ssn}</li>
+                            return <li onClick={() => this.props.getCustomerBookings(customer.ssn)} className="customer" key={newIndex++}>{customer.firstName + " " + customer.lastName + " " + customer.ssn}</li>
                         }
                         )}
                     </ul>

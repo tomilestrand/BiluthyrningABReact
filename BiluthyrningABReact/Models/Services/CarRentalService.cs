@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using BiluthyrningABReact.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using MongoDB.Bson.Serialization;
 
 namespace BiluthyrningABReact.Services
 {
@@ -63,7 +62,6 @@ namespace BiluthyrningABReact.Services
             try
             {
                 var collection = DatabaseService.GetCollectionFromDb<BsonDocument>("Car");
-                //BsonSerializer.Deserialize<CarDM>(collection.ToBsonDocument());
                 var filter = Builders<BsonDocument>.Filter.Eq("RegNum", json.RegNum) & Builders<BsonDocument>.Filter.Eq("CarType", json.CarType);
                 var update = Builders<BsonDocument>.Update.Set("Retired", true);
                 await DatabaseService.UpdateDb(filter, update, collection);
@@ -83,6 +81,15 @@ namespace BiluthyrningABReact.Services
             var collection = DatabaseService.GetCollectionFromDb<BsonDocument>("CarBooking");
             var filter = Builders<BsonDocument>.Filter.Not(Builders<BsonDocument>.Filter.Exists("ReturnDate"));
             var bookings = await collection.Find(filter).ToListAsync();
+
+            foreach (var booking in bookings)
+            {
+                response.Add(new ActiveRentsVM {
+                    CarbookingId = booking["BookingId"].ToString(),
+                    CarType = (CarType)booking["CarType"].ToInt32(),
+                    RegNum = booking["CarRegistrationNumber"].ToString()
+                });
+            }
 
             return response.ToArray();
         }

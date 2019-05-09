@@ -21,4 +21,10 @@ ul {
   background-color: darkslategray;
 }
 
+.customer {
+    cursor: pointer;
+}
 
+.customer:hover {
+    color: greenyellow;
+}

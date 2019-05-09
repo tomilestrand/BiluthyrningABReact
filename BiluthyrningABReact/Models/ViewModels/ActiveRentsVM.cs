@@ -9,6 +9,6 @@ namespace BiluthyrningABReact.Models
     {
         public string RegNum { get; set; }
         public string CarbookingId { get; set; }
-        public int CarType { get; set; }
+        public CarType CarType { get; set; }
     }
 }
