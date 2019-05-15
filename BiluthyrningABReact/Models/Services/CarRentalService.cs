@@ -7,10 +7,15 @@ using MongoDB.Driver;
 
 namespace BiluthyrningABReact.Models
 {
-    public class CarRentalService
+    public class CarRentalService : ICarRental
     {
+        IDatabase databaseService;
         private const decimal baseDayRental = 500;
         private const decimal kmPrice = 20;
+        public CarRentalService(IDatabase database)
+        {
+            databaseService = database;
+        }
         private static decimal CarCost(long numberOfDays, int numberOfKm, CarType typeCar)
         {
             return baseDayRental * numberOfDays * CarFactor() + KmPrice();
@@ -60,10 +65,10 @@ namespace BiluthyrningABReact.Models
         {
             try
             {
-                var collection = DatabaseService.GetCollectionFromDb<BsonDocument>("Car");
+                var collection = databaseService.GetCollectionFromDb<BsonDocument>("Car");
                 var filter = Builders<BsonDocument>.Filter.Eq("RegNum", json.RegNum) & Builders<BsonDocument>.Filter.Eq("CarType", json.CarType);
                 var update = Builders<BsonDocument>.Update.Set("Retired", true);
-                await DatabaseService.UpdateDb(filter, update, collection);
+                await databaseService.UpdateDb(filter, update, collection);
                 return new RetireCarResponseVM { Status = "OK" };
             }
             catch (Exception e)
@@ -77,7 +82,7 @@ namespace BiluthyrningABReact.Models
         {
             var response = new List<ActiveRentsVM>();
 
-            var collection = DatabaseService.GetCollectionFromDb<BsonDocument>("CarBooking");
+            var collection = databaseService.GetCollectionFromDb<BsonDocument>("CarBooking");
             var filter = Builders<BsonDocument>.Filter.Not(Builders<BsonDocument>.Filter.Exists("ReturnDate"));
             var bookings = await collection.Find(filter).ToListAsync();
 
@@ -132,7 +137,7 @@ namespace BiluthyrningABReact.Models
         internal async Task<CustomerBookingVM[]> GetCustomersRents(string ssn)
         {
             var response = new List<CustomerBookingVM>();
-            var collection = DatabaseService.GetCollectionFromDb<BsonDocument>("CarBooking");
+            var collection = databaseService.GetCollectionFromDb<BsonDocument>("CarBooking");
             var filter = Builders<BsonDocument>.Filter.Eq("CustomerId", ssn);
             var bookings = await collection.Find(filter).ToListAsync();
             foreach (var item in bookings)
@@ -160,7 +165,7 @@ namespace BiluthyrningABReact.Models
         private async Task<CustomersVM[]> GetCustomersArray()
         {
             var response = new List<CustomersVM>();
-            var collection = DatabaseService.GetCollectionFromDb<BsonDocument>("Customers");
+            var collection = databaseService.GetCollectionFromDb<BsonDocument>("Customers");
             var documents = await collection.Find(new BsonDocument()).ToListAsync();
             foreach (var item in documents)
             {
@@ -183,7 +188,7 @@ namespace BiluthyrningABReact.Models
                 return new RentFormResponseVM { Status = "Invalid SSN" };
             try
             {
-                var collection = DatabaseService.GetCollectionFromDb<BsonDocument>("CarBooking");
+                var collection = databaseService.GetCollectionFromDb<BsonDocument>("CarBooking");
                 string bookingId = Guid.NewGuid().ToString().Substring(0, 8);
                 var document = new BsonDocument
                 {
@@ -196,7 +201,7 @@ namespace BiluthyrningABReact.Models
                     {"ReturnDate",BsonValue.Create(null) },
                     {"NewMilage",BsonValue.Create(null) }
                 };
-                await DatabaseService.InsertIntoDb<BsonDocument>(document, collection);
+                await databaseService.InsertIntoDb<BsonDocument>(document, collection);
                 return new RentFormResponseVM { CarbookingId = bookingId, CarType = car.CarType, RegNum = car.RegNum, Status = "OK" };
             }
             catch (Exception e)
@@ -210,7 +215,7 @@ namespace BiluthyrningABReact.Models
         {
             try
             {
-                var collection = DatabaseService.GetCollectionFromDb<BsonDocument>("Car");
+                var collection = databaseService.GetCollectionFromDb<BsonDocument>("Car");
                 var document = new BsonDocument
             {
                 {"CarType", car.CarType },
@@ -219,7 +224,7 @@ namespace BiluthyrningABReact.Models
                 {"Retired", false },
                 {"DateAdded", DateTime.Now }
             };
-                await DatabaseService.InsertIntoDb<BsonDocument>(document, collection);
+                await databaseService.InsertIntoDb<BsonDocument>(document, collection);
 
                 return "OK";
             }
@@ -233,11 +238,11 @@ namespace BiluthyrningABReact.Models
         internal async Task<CarVM[]> GetAvailableCarsByCarType(RentFormQueryVM json)
         {
             int carType = json.CarType;
-            var collection = DatabaseService.GetCollectionFromDb<BsonDocument>("Car");
+            var collection = databaseService.GetCollectionFromDb<BsonDocument>("Car");
             var filter = Builders<BsonDocument>.Filter.Eq("CarType", carType) & Builders<BsonDocument>.Filter.Eq("Retired", false);
             var cars = await collection.Find(filter).ToListAsync();
 
-            collection = DatabaseService.GetCollectionFromDb<BsonDocument>("CarBooking");
+            collection = databaseService.GetCollectionFromDb<BsonDocument>("CarBooking");
             filter = Builders<BsonDocument>.Filter.Eq("CarType", carType) & Builders<BsonDocument>.Filter.Eq("ReturnDate", BsonValue.Create(null));
             var bookings = await collection.Find(filter).Project(q => q["CarRegistrationNumber"]).ToListAsync();
             cars.RemoveAll(car => bookings.Contains(car["RegNum"]));
@@ -247,7 +252,7 @@ namespace BiluthyrningABReact.Models
 
         private async Task<CarVM> GetCarByRegNum(string regNum)
         {
-            var collection = DatabaseService.GetCollectionFromDb<BsonDocument>("Car");
+            var collection = databaseService.GetCollectionFromDb<BsonDocument>("Car");
             var filter = Builders<BsonDocument>.Filter.Eq("RegNum", regNum) & Builders<BsonDocument>.Filter.Eq("Retired", false);
             var car = await collection.Find(filter).FirstOrDefaultAsync();
             return new CarVM { CarType = car["CarType"].ToInt32(), NumOfKm = car["NumOfKm"].ToInt32(), RegNum = car["RegNum"].ToString() };
@@ -257,7 +262,7 @@ namespace BiluthyrningABReact.Models
         {
             try
             {
-                var collection = DatabaseService.GetCollectionFromDb<BsonDocument>("CarBooking");
+                var collection = databaseService.GetCollectionFromDb<BsonDocument>("CarBooking");
                 var filter = Builders<BsonDocument>.Filter.Eq("BookingId", json.CarbookingId);
                 var booking = await collection.Find(filter).FirstOrDefaultAsync();
                 DateTime startDate = booking["StartTime"].ToLocalTime();
@@ -272,13 +277,13 @@ namespace BiluthyrningABReact.Models
                     return new ReturnFormResponseVM { Status = "Invalid return milage" };
 
                 var update = Builders<BsonDocument>.Update.Set("ReturnDate", returnDate).Set("NewMilage", json.NewMilage);
-                await DatabaseService.UpdateDb(filter, update, collection);
+                await databaseService.UpdateDb(filter, update, collection);
 
                 string regNum = booking["CarRegistrationNumber"].ToString();
-                collection = DatabaseService.GetCollectionFromDb<BsonDocument>("Car");
+                collection = databaseService.GetCollectionFromDb<BsonDocument>("Car");
                 filter = Builders<BsonDocument>.Filter.Eq("RegNum", regNum);
                 update = Builders<BsonDocument>.Update.Set("NumOfKm", json.NewMilage);
-                await DatabaseService.UpdateDb(filter, update, collection);
+                await databaseService.UpdateDb(filter, update, collection);
 
                 long numberOfDays = (returnDate.Ticks - startDate.Ticks) / TimeSpan.TicksPerDay;
                 int numberOfKm = json.NewMilage - initalKm;

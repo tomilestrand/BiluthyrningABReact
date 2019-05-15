@@ -4,19 +4,19 @@ using MongoDB.Driver;
 
 namespace BiluthyrningABReact.Models
 {
-    internal static class DatabaseService
+    internal class DatabaseService : IDatabase
     {
         private const string connString = "mongodb://localhost:27017";
         private const string database = "BiluthyrningAB";
 
-        internal static IMongoCollection<T> GetCollectionFromDb<T>(string collection)
+        public IMongoCollection<T> GetCollectionFromDb<T>(string collection)
         {
             var client = new MongoClient(connString);
             var dataBase = client.GetDatabase(database);
             return dataBase.GetCollection<T>(collection);
         }
 
-        internal static async Task<bool> UpdateDb<T>(FilterDefinition<T> filter, UpdateDefinition<T> update, IMongoCollection<T> collection)
+        public async Task<bool> UpdateDb<T>(FilterDefinition<T> filter, UpdateDefinition<T> update, IMongoCollection<T> collection)
         {
             try
             {
@@ -30,7 +30,7 @@ namespace BiluthyrningABReact.Models
             }
         }
 
-        internal static async Task<bool> InsertIntoDb<T>(T row, IMongoCollection<T> collection)
+        public async Task<bool> InsertIntoDb<T>(T row, IMongoCollection<T> collection)
         {
             try
             {
