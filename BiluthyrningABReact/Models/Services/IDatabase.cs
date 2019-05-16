@@ -10,7 +10,7 @@ namespace BiluthyrningABReact.Models
     {
         Task<IMongoCollection<T>> GetCollectionFromDb<T>(string collection);
 
-        Task<bool> UpdateDb<T>(FilterDefinition<T> filter, UpdateDefinition<T> update, IMongoCollection<T> collection);
+        Task<long> UpdateDb<T>(FilterDefinition<T> filter, UpdateDefinition<T> update, IMongoCollection<T> collection);
 
         Task<bool> InsertIntoDb<T>(T row, IMongoCollection<T> collection);
     }

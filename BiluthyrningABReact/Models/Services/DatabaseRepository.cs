@@ -5,10 +5,10 @@ using MongoDB.Driver;
 
 namespace BiluthyrningABReact.Models
 {
-    internal class DatabaseService : IDatabase
+    internal class DatabaseRepository : IDatabase
     {
         IConfiguration configuration;
-        public DatabaseService(IConfiguration configuration)
+        public DatabaseRepository(IConfiguration configuration)
         {
             this.configuration = configuration;
         }
