@@ -5,21 +5,11 @@ using MongoDB.Driver;
 
 namespace BiluthyrningABReact.Models
 {
-    internal class DatabaseRepository : IDatabase
+    public class DatabaseRepository : IDatabase
     {
-        IConfiguration configuration;
-        public DatabaseRepository(IConfiguration configuration)
-        {
-            this.configuration = configuration;
-        }
-
         public async Task<IMongoCollection<T>> GetCollectionFromDb<T>(string collection)
         {
-            string connString = configuration["connString"];/*"mongodb://localhost:27017";*/
-            string database = configuration["dataBase"];/* "BiluthyrningAB";*/
-            var client = new MongoClient(connString);
-            var dataBase = client.GetDatabase(database);
-            return dataBase.GetCollection<T>(collection);
+            return null;
         }
 
         public async Task<long> UpdateDb<T>(FilterDefinition<T> filter, UpdateDefinition<T> update, IMongoCollection<T> collection)

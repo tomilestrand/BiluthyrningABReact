@@ -7,11 +7,12 @@ using MongoDB.Driver;
 
 namespace BiluthyrningABReact.Models
 {
-    public class CarRentalService : ICarRental
+    public class CarRentalRepository : ICarRental
     {
         IDatabase databaseService;
-
-        public CarRentalService(IDatabase database)
+        public const decimal baseDayRental = 500;
+        public const decimal kmPrice = 20;
+        public CarRentalRepository(IDatabase database)
         {
             databaseService = database;
         }
@@ -263,9 +264,6 @@ namespace BiluthyrningABReact.Models
 
         decimal CarCost(long numberOfDays, int numberOfKm, CarType typeCar)
         {
-            decimal baseDayRental = 500;
-            decimal kmPrice = 20;
-
             return baseDayRental * numberOfDays * CarFactor() + KmPrice();
 
             decimal CarFactor()
