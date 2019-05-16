@@ -1,16 +1,22 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 
 namespace BiluthyrningABReact.Models
 {
     internal class DatabaseService : IDatabase
     {
-        private const string connString = "mongodb://localhost:27017";
-        private const string database = "BiluthyrningAB";
-
-        public IMongoCollection<T> GetCollectionFromDb<T>(string collection)
+        IConfiguration configuration;
+        public DatabaseService(IConfiguration configuration)
         {
+            this.configuration = configuration;
+        }
+
+        public async Task<IMongoCollection<T>> GetCollectionFromDb<T>(string collection)
+        {
+            string connString = configuration["connString"];/*"mongodb://localhost:27017";*/
+            string database = configuration["dataBase"];/* "BiluthyrningAB";*/
             var client = new MongoClient(connString);
             var dataBase = client.GetDatabase(database);
             return dataBase.GetCollection<T>(collection);

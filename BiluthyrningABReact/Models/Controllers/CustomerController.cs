@@ -5,9 +5,9 @@ namespace BiluthyrningABReact.Models
 {
     public class CustomerController : Controller
     {
-        CarRentalService service;
+        ICarRental service;
 
-        public CustomerController(CarRentalService service)
+        public CustomerController(ICarRental service)
         {
             this.service = service;
         }
